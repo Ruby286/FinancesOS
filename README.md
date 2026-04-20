@@ -6,7 +6,7 @@ Aplicación web de gestión financiera personal desarrollada como proyecto de po
 
 ## 🖥️ Demo
 
-> Puedes ver el proyecto en vivo en: 
+> Puedes ver el proyecto en vivo en: https://github.com/Ruby286/FinancesOS
 
 ---
 
