@@ -59,7 +59,7 @@ financeos/
 No requiere instalación ni servidor. Simplemente clona el repositorio y abre `index.html` en tu navegador:
 
 ```bash
-git clone 
+git clone https://github.com/Ruby286/FinancesOS
 cd financeos
 # Abre index.html en tu navegador
 ```
