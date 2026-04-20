@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FinanceOS — Portfolio App</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- BACKGROUND GRID -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <span class="logo-bracket">[</span>
+      <span class="logo-text">FINANCE<span class="accent">OS</span></span>
+      <span class="logo-bracket">]</span>
+    </div>
+    <nav class="header-nav">
+      <span class="nav-item active" data-section="gastos">GASTOS</span>
+      <span class="nav-item" data-section="inversiones">INVERSIONES</span>
+      <span class="nav-item" data-section="interes">INTERÉS COMPUESTO</span>
+    </nav>
+    <div class="header-right">
+      <span class="status-dot"></span>
+      <span class="status-text">SISTEMA ACTIVO</span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">// PROGRAMA FINANCIERO PERSONAL v1.0</div>
+    <h1 class="hero-title">
+      CONTROLA TU<br>
+      <span class="hero-accent">FUTURO FINANCIERO</span>
+    </h1>
+    <p class="hero-sub">Gestión de gastos · Análisis de inversiones · Interés compuesto</p>
+    <div class="hero-line"></div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- ══════════════ SECCIÓN 1: GASTOS ══════════════ -->
+    <section id="gastos" class="module active">
+      <div class="module-header">
+        <span class="module-id">MOD_01</span>
+        <h2 class="module-title">ANÁLISIS DE GASTOS</h2>
+        <span class="module-desc">Calcula tu ahorro mensual</span>
+      </div>
+
+      <div class="grid-two">
+        <!-- Gastos Fijos — introducidos por el usuario -->
+        <div class="card">
+          <div class="card-label">GASTOS FIJOS MENSUALES</div>
+
+          <!-- Formulario de añadir gasto fijo -->
+          <div class="add-fixed-row">
+            <input type="text"   id="fixed-nombre"  placeholder="Nombre (ej: Netflix)" class="input-inline"/>
+            <input type="number" id="fixed-importe" placeholder="€" min="0" step="0.01" class="input-inline input-short"/>
+            <button class="btn-add" onclick="añadirGastoFijo()" title="Añadir gasto fijo">+</button>
+          </div>
+
+          <!-- Lista dinámica -->
+          <div class="fixed-expenses" id="fixed-list">
+            <!-- filas generadas por JS -->
+            <div class="fixed-empty" id="fixed-empty">
+              <span>// Sin gastos fijos aún</span>
+            </div>
+          </div>
+
+          <!-- Total -->
+          <div class="fixed-row total-row">
+            <span>TOTAL FIJOS</span>
+            <span class="val accent" id="totalFijos">0,00 €</span>
+          </div>
+        </div>
+
+        <!-- Inputs variables -->
+        <div class="card">
+          <div class="card-label">DATOS DEL MES</div>
+          <div class="input-group">
+            <label>SUELDO (€)</label>
+            <input type="number" id="sueldo" placeholder="0.00" min="0" step="0.01"/>
+          </div>
+          <div class="input-group">
+            <label>GASTOS VARIABLES (€)</label>
+            <input type="number" id="variables" placeholder="0.00" min="0" step="0.01"/>
+          </div>
+          <div class="input-group">
+            <label>COMPRAS (€)</label>
+            <input type="number" id="compras" placeholder="0.00" min="0" step="0.01"/>
+          </div>
+          <div class="input-group">
+            <label>IMPREVISTOS (€)</label>
+            <input type="number" id="imprevistos" placeholder="0.00" min="0" step="0.01"/>
+          </div>
+          <div class="input-group">
+            <label>OCIO (€)</label>
+            <input type="number" id="ocio" placeholder="0.00" min="0" step="0.01"/>
+          </div>
+          <button class="btn-primary" onclick="calcularGastos()">CALCULAR AHORRO</button>
+        </div>
+      </div>
+
+      <!-- RESUMEN -->
+      <div class="card result-card hidden" id="resumenCard">
+        <div class="card-label">// RESUMEN DEL MES</div>
+        <div class="resumen-grid">
+          <div class="resumen-item">
+            <span class="resumen-label">SUELDO</span>
+            <span class="resumen-val green" id="r-sueldo">—</span>
+          </div>
+          <div class="resumen-item">
+            <span class="resumen-label">FIJOS</span>
+            <span class="resumen-val red" id="r-fijos">—</span>
+          </div>
+          <div class="resumen-item">
+            <span class="resumen-label">VARIABLES</span>
+            <span class="resumen-val red" id="r-variables">—</span>
+          </div>
+          <div class="resumen-item">
+            <span class="resumen-label">COMPRAS</span>
+            <span class="resumen-val red" id="r-compras">—</span>
+          </div>
+          <div class="resumen-item">
+            <span class="resumen-label">IMPREVISTOS</span>
+            <span class="resumen-val red" id="r-imprevistos">—</span>
+          </div>
+          <div class="resumen-item">
+            <span class="resumen-label">OCIO</span>
+            <span class="resumen-val red" id="r-ocio">—</span>
+          </div>
+        </div>
+        <div class="ahorro-display">
+          <span class="ahorro-label">AHORRO NETO</span>
+          <span class="ahorro-value" id="r-ahorro">0,00 €</span>
+        </div>
+        <div class="ahorro-bar-wrap">
+          <div class="ahorro-bar" id="ahorroBar"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ SECCIÓN 2: INVERSIONES ══════════════ -->
+    <section id="inversiones" class="module">
+      <div class="module-header">
+        <span class="module-id">MOD_02</span>
+        <h2 class="module-title">RENTABILIDAD DE INVERSIONES</h2>
+        <span class="module-desc">Calcula el retorno de tu inversión</span>
+      </div>
+
+      <div class="grid-two">
+        <div class="card">
+          <div class="card-label">PARÁMETROS</div>
+          <div class="input-group">
+            <label>CAPITAL INVERTIDO (€)</label>
+            <input type="number" id="inv-capital" placeholder="0.00" min="0" step="0.01"/>
+          </div>
+          <div class="input-group">
+            <label>RENTABILIDAD ANUAL (%)</label>
+            <input type="number" id="inv-porcentaje" placeholder="0.00" min="0" step="0.01"/>
+          </div>
+          <div class="input-group">
+            <label>PERÍODO</label>
+            <div class="toggle-group">
+              <button class="toggle-btn active" data-period="dias">DÍAS</button>
+              <button class="toggle-btn" data-period="meses">MESES</button>
+              <button class="toggle-btn" data-period="años">AÑOS</button>
+            </div>
+          </div>
+          <div class="input-group" id="inv-dias-group">
+            <label>NÚMERO DE DÍAS</label>
+            <input type="number" id="inv-dias" placeholder="365" min="1"/>
+          </div>
+          <button class="btn-primary" onclick="calcularInversion()">CALCULAR RENTABILIDAD</button>
+        </div>
+
+        <div class="card result-card" id="inv-result">
+          <div class="card-label">// RESULTADO</div>
+          <div class="inv-result-display">
+            <div class="inv-metric">
+              <span class="inv-metric-label">CAPITAL INICIAL</span>
+              <span class="inv-metric-val" id="inv-r-capital">—</span>
+            </div>
+            <div class="inv-metric">
+              <span class="inv-metric-label">RENTABILIDAD ANUAL</span>
+              <span class="inv-metric-val accent" id="inv-r-anual">—</span>
+            </div>
+            <div class="inv-metric highlight-metric">
+              <span class="inv-metric-label" id="inv-r-period-label">RENTABILIDAD DEL PERÍODO</span>
+              <span class="inv-metric-val large green" id="inv-r-periodo">—</span>
+            </div>
+          </div>
+          <div class="scanline-deco"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════ SECCIÓN 3: INTERÉS COMPUESTO ══════════════ -->
+    <section id="interes" class="module">
+      <div class="module-header">
+        <span class="module-id">MOD_03</span>
+        <h2 class="module-title">INTERÉS COMPUESTO</h2>
+        <span class="module-desc">Proyección con aportaciones periódicas</span>
+      </div>
+
+      <div class="grid-two">
+        <div class="card">
+          <div class="card-label">CONFIGURACIÓN</div>
+          <div class="input-group">
+            <label>CAPITAL INICIAL (€)</label>
+            <input type="number" id="ic-capital" placeholder="1000.00" min="0" step="0.01"/>
+          </div>
+          <div class="input-group">
+            <label>RENTABILIDAD ANUAL (%)</label>
+            <input type="number" id="ic-porcentaje" placeholder="7.00" min="0" step="0.01"/>
+          </div>
+          <div class="input-group">
+            <label>APORTACIÓN PERIÓDICA (€)</label>
+            <input type="number" id="ic-aportacion" placeholder="100.00" min="0" step="0.01"/>
+          </div>
+          <div class="input-group">
+            <label>PERÍODO DE CÁLCULO</label>
+            <div class="toggle-group" id="ic-toggle">
+              <button class="toggle-btn active" data-ic="dias">DÍAS</button>
+              <button class="toggle-btn" data-ic="meses">MESES</button>
+              <button class="toggle-btn" data-ic="años">AÑOS</button>
+            </div>
+          </div>
+          <div class="input-group">
+            <label id="ic-tiempo-label">NÚMERO DE DÍAS</label>
+            <input type="number" id="ic-tiempo" placeholder="365" min="1"/>
+          </div>
+          <button class="btn-primary" onclick="calcularInteresCompuesto()">PROYECTAR</button>
+        </div>
+
+        <div class="card">
+          <div class="card-label">// PROYECCIÓN</div>
+          <div class="ic-summary hidden" id="ic-summary">
+            <div class="ic-total-display">
+              <span class="ic-label">CAPITAL FINAL</span>
+              <span class="ic-big" id="ic-final">—</span>
+            </div>
+            <div class="ic-breakdown">
+              <div class="ic-row"><span>Capital inicial</span><span id="ic-ini">—</span></div>
+              <div class="ic-row"><span>Total aportado</span><span id="ic-aportado">—</span></div>
+              <div class="ic-row accent-row"><span>Intereses generados</span><span id="ic-intereses" class="accent">—</span></div>
+            </div>
+          </div>
+          <div class="ic-table-wrap">
+            <table class="ic-table hidden" id="ic-table">
+              <thead>
+                <tr>
+                  <th>PERÍODO</th>
+                  <th>CAPITAL (€)</th>
+                </tr>
+              </thead>
+              <tbody id="ic-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>FinanceOS · Desarrollado en Java · Portfolio Personal</span>
+    <span class="footer-accent">// SISTEMA OPERATIVO</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
